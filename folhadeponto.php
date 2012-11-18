@@ -12,9 +12,13 @@
 	
 	require "classes/funcionarios.class.php";
 	require "classes/administrador.class.php";
+	require "classes/folhadeponto.class.php";
 	
 	$prosis = new Funcionarios();
 	$total = $prosis->countFuncionarios();
+
+	$fponto = new FolhaDePonto();
+	$fponto->checarFechamentos();
 
 
 	//set current menu
@@ -125,9 +129,7 @@
             <!-- Secondary navigation -->
             <nav id="secondary">
               <ul>
-                <li class="current"><a href="#maintab">Lista de Funcionários</a></li>
-                <li><a href="#cadastrar">Cadastrar Funcionário</a></li>
-                <li><a href="#buscar">Buscar Funcionário</a></li>
+                <li class="current"><a href="#maintab">Lista de Fechamentos</a></li>
               </ul>
             </nav>
           
@@ -135,78 +137,53 @@
             <section id="content">
               
               <div class="tab" id="maintab">
-                <h2>Lista de Funcionários</h2> 
+                <h2>Fechamentos</h2> 
 
 			<br />
 				<table class="datatable">
 				    <thead>
-
 				      <tr>
-						<th>ID</th>
-				        <th>Nome Completo</th>
-						<th>CPF</th>
-				        <th>Cargo</th>
-				        <th>Telefone</th>
-						<th>Salário</th>
+						<th>Data</th>
+				        <th>Fechamento</th>
 						<th>Ações</th>
-						
 				      </tr>
 				    </thead>
 
 				    <tbody>
-					
-
-
+				
 
 					<?php
 
 						
 
-						$sql = 
-						"SELECT 
-							f.cod_funcionario AS cod_funcionario, 
-							f.nome AS nome, 
-							t.telefone AS telefone,
-							d.cpf AS cpf, 
-							c.cargo AS cargo, 
-							c.salario AS salario
-
-						FROM funcionario AS f
-
-						INNER JOIN documentos AS d ON
-							d.cod_funcionario = f.cod_funcionario
-
-						INNER JOIN telefone AS t ON
-							t.cod_funcionario = f.cod_funcionario
-
-						INNER JOIN contrato AS c ON
-							c.cod_funcionario = f.cod_funcionario
+						$sql = "SELECT * FROM fechamentoFolhaDePonto ORDER BY id DESC";
 						
-						ORDER BY 
-						 	f.cod_funcionario DESC";
-						
-						$query = mysql_query($sql);
+						$query = $fponto->bd->qry($sql);
 
 						// echo $sql;
 						
-						while($inf = mysql_fetch_object($query)):
+						while($inf = $fponto->bd->fetch($query)):
+
+						$fechado = "Em aberto";
+						$cor = "background: #DDF0DA";
+
+						if($inf->fechado == 1)
+						{
+							$fechado = "Fechado";
+							$cor = "background: #F0C7C8";
+						}
 					?>
 					
-				      <tr>
-				        <td><?php echo $inf->cod_funcionario; ?></td>
-				        <td><?php echo $inf->nome; ?></td>
-						<td><?php echo $inf->cpf; ?></td>
-				        <td><?php echo $inf->cargo; ?></td>
-						<td><?php echo $inf->telefone; ?></td>
-						<td>R$ <?php echo number_format($inf->salario, 2, ', ', '.'); ?></td>
-						<td>
+					
+					
+				      <tr style="<?php echo $cor; ?>">
+				        <td style="<?php echo $cor; ?>"><?php echo "$inf->mes/$inf->ano"; ?></td>
+						<td style="<?php echo $cor; ?>"><?php echo $fechado; ?></td>
+						<td style="<?php echo $cor; ?>">
 						  <span class="button-group">
-							  <a href="visualizar.php?id=<?php echo $inf->cod_funcionario; ?>" class="button icon user">Ver</a>
-						      <a href="editar.php?id=<?php echo $inf->cod_funcionario; ?>" class="button icon edit">Editar</a>
-						      <a href="#confirmarExclusao" class="button icon remove danger excluir" onclick="document.getElementById('linkExcluir').href='excluir.php?id=<?php echo $inf->cod_funcionario; ?>'">Deletar</a>
+						      <a href="editar.php?id=<?php echo $inf->cod_funcionario; ?>" class="button icon edit">Fechar Folha de Ponto</a>
 						  </span>
 						 </td>
-				       
 				      </tr>
 				
 					<?php
@@ -220,506 +197,10 @@
 <div class="clear"></div>
               </div>
               
-              <div class="tab" id="cadastrar">
-                
-				
-				<form action="#" id="descontos" style="display: none;">
-					 <div class="column left">
-				    <section>
-				      <label for="nome">
-				        INSS
-						<small>Por favor, escreva o nome completo.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" class="required" placeholder="Digite o Nome" name="nome" id="sdasa">
-				      </div>
-				    </section>
-
-				    
-				    <section>
-				      <label for="nasci">
-				        Passe
-						<small>Por favor, digite a data de nascimento.</small>	
-				      </label>
-
-				      <div>
-				        <input type="text" class="medium" placeholder="Data de Nascimento" id="nasadasasasdasdsci" name="sdasdsadasd">
-				      </div>
-				    </section>
-				
-				
-				    
-				  </div>
-
-				  <div class="column right">
-
-					   		<section>
-						      <label for="etnia">
-						        Sei la o que
-								<small>Por favor, digite a sua etnia.</small>	
-						      </label>
-
-						      <div>
-						        <input type="text" placeholder="Digite sua Etnia" id="etnia" name="sadsadetnia">
-						      </div>
-						    </section>
-
-							<section>
-						      <label for="estCivil">
-						        Toma no cu
-								<small>Por favor, digite a seu estado civil.</small>	
-						      </label>
-
-						      <div>
-						        <select name="estCivil" id="estCsadsadivil">
-						        	<option>Selecione seu Estado Civil</option>
-						        	<option value="Solteiro">Solteiro(a)</option>
-									<option value="Casado">Casado(a)</option>
-									<option value="Viúvo">Viúvo(a)</option>
-								</select>
-						      </div>
-						    </section>
-					
-						
-				  </div>
-				</form>
-				
-				<form action="#" id="cadastrarF" method="post" class="validar">
-				
-				<h2>Cadastrar Funcionário</h2>
-				  				
-				<br />
-				
-				<h3>Dados Pessoais</h3>
-				
-				  <div class="column left">
-				    <section>
-				      <label for="nome">
-				        Nome
-						<small>Por favor, escreva o nome completo.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" class="required" placeholder="Digite o Nome" name="nome" id="nome">
-				      </div>
-				    </section>
-
-				    
-				    <section>
-				      <label for="nasc">
-				        Data de Nascimento
-						<small>Por favor, digite a data de nascimento.</small>	
-				      </label>
-
-				      <div>
-				        <input type="text" class="medium" placeholder="Data de Nascimento" id="nasc" name="nasc">
-				      </div>
-				    </section>
-				
-				
-				    
-				  </div>
-
-				  <div class="column right">
-
-					   		<section>
-						      <label for="etnia">
-						        Etnia
-								<small>Por favor, digite a sua etnia.</small>	
-						      </label>
-
-						      <div>
-						        <input type="text" placeholder="Digite sua Etnia" id="etnia" name="etnia">
-						      </div>
-						    </section>
-
-							<section>
-						      <label for="estCivil">
-						        Estado Civil
-								<small>Por favor, digite a seu estado civil.</small>	
-						      </label>
-
-						      <div>
-						        <select name="estCivil" id="estCivil">
-						        	<option>Selecione seu Estado Civil</option>
-						        	<option value="Solteiro">Solteiro(a)</option>
-									<option value="Casado">Casado(a)</option>
-									<option value="Viúvo">Viúvo(a)</option>
-								</select>
-						      </div>
-						    </section>
-					
-						
-				  </div>
-				<div class="clear"></div>
-				<br /><br />
-				
-				<h3>Endereço</h3>
-				
-				<div class="column left">
-					
-					<section>
-				      <label for="cep">
-				        CEP
-				        <small>Por favor, digite seu CEP.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="3" value="f" class="required" placeholder="Digite seu CEP" name="cep" id="cep">
-				      </div>
-				    </section>
-				
-					<section>
-				      <label for="cep">
-				        Rua
-				        <small>Por favor, digite sua rua.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="3" class="required" placeholder="Digite sua Rua" name="rua" id="rua">
-				      </div>
-				    </section>
-				
-					<section>
-				      <label for="bairro">
-				        Bairro
-				        <small>Por favor, digite sua bairro.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="3" class="required" placeholder="Digite seu Bairro" name="bairro" id="bairro">
-				      </div>
-				    </section>
-				
-				
-				
-				</div>
-				
-				<div class="column right">
-					<section>
-				      <label for="cidade">
-				        Cidade
-				        <small>Por favor, digite sua bairro.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="3" class="required" placeholder="Digite seu Cidade" name="cidade" id="cidade">
-				      </div>
-				    </section>
-				
-					<section>
-				      <label for="estado">
-				        Estado
-				        <small>Por favor, digite seu estado.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="2" class="required" placeholder="Digite seu Estado" name="estado" id="estado">
-				      </div>
-				    </section>
-				
-					<section>
-				      <label for="numero">
-				        Número
-				        <small>Por favor, digite o número da sua casa.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" class="required" placeholder="Digite o número da sua casa" name="numero" id="numero">
-
-				      </div>
-				    </section>
-				
-					
-				
-				</div>
-				<div class="clear"></div>
-			<br /><br />
-			
-				
-				<h3>Contato</h3>
-				
-				<div class="column left">
-					
-					<section>
-				      <label for="telefone">
-				        Telefone
-				        <small>Por favor, digite seu telefone.</small>
-				      </label>
-
-				      <div>
-				        <input type="text" minlength="3" class="required" placeholder="Digite seu telefone" name="telefone" id="telefone">
-
-				      </div>
-				    </section>
-				
-				</div>
-				
-				<div class="clear"></div>
-				
-				<br /><br />
-
-
-					<h3>Documentos</h3>
-
-					<div class="column left">
-
-						<section>
-					      <label for="cpf">
-					        CPF
-					        <small>Por favor, digite seu CPF. </small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" class="required" placeholder="Digite seu CPF" name="cpf" id="cpf">
-
-					      </div>
-					    </section>
-					
-						<section>
-					      <label for="rg">
-					        RG
-					        <small>Por favor, digite seu RG. </small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" class="required" placeholder="Digite seu RG" name="rg" id="rg">
-
-					      </div>
-					    </section>
-					
-						<section>
-					      <label for="cnh">
-					        CNH
-					        <small>Por favor, digite sua CNH. </small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" placeholder="Digite sua CNH" name="cnh" id="cnh">
-
-					      </div>
-					    </section>
-					
-						<section>
-					      <label for="pis">
-					        PIS
-					        <small>Por favor, digite sua PIS. </small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" class="required" placeholder="Digite sua PIS" name="pis" id="pis">
-
-					      </div>
-					    </section>
-
-					</div>
-					
-					<div class="column right">
-						<section>
-					      <label for="tituloeleitoral">
-					        Titulo Eleitoral
-					        <small>Por favor, digite seu título eleitoral.</small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" class="required" placeholder="Digite seu título eleitoral" name="tituloeleitoral" id="tituloeleitoral">
-					      </div>
-					    </section>
-
-						<section>
-					      <label for="escolaridade">
-					        Escolaridade
-					        <small>Por favor, selecione sua escolaridade.</small>
-					      </label>
-
-					      	<div>
-						        <select name="escolaridade" id="escolaridade">
-									<option value="" selected>Selecione</option>
-						        	<option value="Primeiro Grau Incompleto">1° Grau - Primário Incompleto</option>
-																		<option value="Primeiro Grau Completo">1° Grau - Primário Completo</option>
-																		<option value="Ginasio Incompleto">1° Grau - Ginasial Incompleto</option>
-																		<option value="Ginasio Completo">1° Grau - Ginasial Completo</option>
-																		<option value="Segundo Grau Incompleto">2° Grau - Colegial Incompleto</option>
-																		<option value="Segundo Grau Completo">2° Grau - Colegial Completo</option>
-																		<option value="Terceiro Grau Incompleto">3° Grau - Superior Incompleto</option>
-																		<option value="Terceiro Grau Completo">3° Grau - Superior Completo</option>
-																		<option value="Especialização">Especialização</option>
-																		<option value="Mestrado">Mestrado</option>
-																		<option value="Doutorado">Doutorado</option>
-						        </select>
-						      </div>
-					    </section>
-
-						<section>
-					      <label for="nacionalidade">
-					        Nacionalidade
-					        <small>Por favor, digite a sua nacionalidade.</small>
-					      </label>
-
-					      <div>
-					        <input type="text" minlength="3" class="required" placeholder="Digite a sua nacionalidade" name="nacionalidade" id="nacionalidade">
-
-					      </div>
-					    </section>
-
-
-
-					</div>
-					
-					<div class="clear"></div>
-				<br /><br />
-
-
-					
-
-
-						<h3>Contrato</h3>
-
-						<div class="column left">
-
-							<section>
-						      <label for="cargo">
-						        Cargo
-						        <small>Por favor, digite seu Cargo.</small>
-						      </label>
-
-						      <div>
-						        <input type="text" minlength="3" class="required" placeholder="Digite seu cargo" name="cargo" id="cargo">
-
-						      </div>
-						    </section>
-						
-						
-								<section>
-							      <label for="salarioValor">
-							        Salário
-							        <small>Por favor, digite seu salário.</small>
-							      </label>
-
-							      <div>
-							        <input type="text" minlength="3" class="required" placeholder="Digite seu salário" name="salario" id="salarioValor">
-							      </div>
-							    </section>
-
-							<section>
-						      <label for="cargahoraria">
-						        Carga Horaria
-						        <small>Por favor, digite sua carga horária. </small>
-						      </label>
-
-						      <div>
-						        <input type="text" class="required" placeholder="Digite sua carga horária" name="cargahoraria" id="cargahoraria">
-
-						      </div>
-						    </section>
-
-						
-
-							<section>
-						      <label for="admissao">
-						        Data de Admissão
-						        <small>Por favor, digite sua data de admissão. </small>
-						      </label>
-
-						      <div>
-						        <input type="text" minlength="3" class="required" placeholder="Digite sua data de admissão" name="admissao" id="admissao">
-
-						      </div>
-						    </section>
-
-						</div>
-
-						
-	<div class="column right">
-							<section>
-						      <label for="banco">
-						        Banco
-						        <small>Por favor, selecione seu banco.</small>
-						      </label>
-
-						      <div>
-						        <select name="banco" id="banco">
-									<option value="" selected>Selecione</option>
-						        	<option value="Banco do Brasil">Banco do Brasil</option>
-						        	<option value="Banco Real">Banco Real</option>
-						        	<option value="HSBC">HSBC</option>
-									<option value="Bradesco">Bradesco</option>
-									<option value="Santander">Santander</option>
-									<option value="Caixa Econômica">Caixa Econômica</option>
-									<option value="Nossa Caixa">Nossa Caixa</option>
-									<option value="Itaú">Itaú</option>
-									<option value="Safra">Safra</option>
-									<option value="CitiBank">CitiBank</option>
-						        </select>
-						      </div>
-						    </section>
-
-							<section>
-						      <label for="agencia">
-						        Agência
-						        <small>Por favor, digite a agência de seu banco.</small>
-						      </label>
-
-						      <div>
-						        <input type="text" minlength="3" class="required" placeholder="Digite a sua agência" name="agencia" id="agencia">
-
-						      </div>
-						    </section>
-						
-								<section>
-							      <label for="conta">
-							        Conta
-							        <small>Por favor, digite o número de sua conta bancária.</small>
-							      </label>
-
-							      <div>
-							        <input type="text" minlength="3" class="required" placeholder="Digite a sua conta bancária" name="conta" id="conta">
-
-							      </div>
-							    </section>
-						
-
-
-
-						</div>
-				
-					  <div class="clear"></div>
-
-					 <br />
-				<br>
-					
-				  
-
-				</form>
-				<p>
-				    <input type="submit" id="proximaetapa" value="Próxima Etapa" class="button primary submit">
-				  </p>
-					
-              </div>
+        
 
              
-				<div id="buscar" class="tab">
-					<h2>Buscar Funcionário</h2>
-						<form action="pesquisar.php" method="post">
-							<section>
-							      <label for="username">
-							        Buscar Funcionário
-							        <small>Busque por id, nome, cpf, rg ou cargo.</small>
-							      </label>
 
-							      <div>
-							        <input type="text" minlength="3" class="required" placeholder="Pesquisar" name="pesquisa" id="pesquisa">
-							        
-							      </div>
-							    </section>
-							
-								<br />
-								<p>
-								    <input type="submit" value="Buscar Funcionário" class="button primary submit" />
-								  </p>
-						</form><br />
-				</div> <!-- !buscar -->
 
             </section>
           </div>
