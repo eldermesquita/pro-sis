@@ -166,11 +166,15 @@
 
 						$fechado = "Em aberto";
 						$cor = "background: #DDF0DA";
+						$texto = "Fechar Folha de Ponto";
+						$link = "criarfolhaponto.php?id=";
 
 						if($inf->fechado == 1)
 						{
 							$fechado = "Fechado";
 							$cor = "background: #F0C7C8";
+							$texto = "Editar Folha de Ponto";
+							$link = "editarFolha.php?id=";
 						}
 					?>
 					
@@ -181,7 +185,7 @@
 						<td style="<?php echo $cor; ?>"><?php echo $fechado; ?></td>
 						<td style="<?php echo $cor; ?>">
 						  <span class="button-group">
-						      <a href="editar.php?id=<?php echo $inf->cod_funcionario; ?>" class="button icon edit">Fechar Folha de Ponto</a>
+						      <a href="<?php echo $link . $inf->id; ?>" class="button icon edit"><?php echo $texto; ?></a>
 						  </span>
 						 </td>
 				      </tr>
