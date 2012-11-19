@@ -39,74 +39,114 @@
 			}
 		}
 
-		function getCodFuncionario(){
-			return $cod_funcionario;
-		}
-		
-		function getAno(){
-			return $ano;
-		}
-		
-		function getMes(){
-			return $mes;
-		}
-		
-		function getFaltas(){
-			return $faltas;
-		}
-		
-		function getDsr(){
-			return $dsr;
-		}
-		
-		function getHe60(){
-			return $he60;
-		}
-		
-		function getHe100(){
-			return $he100;
-		}
-		
-		function getFeriado(){
-			return $feriado;
+
+		public function cadastrar() {
+			$bd = $this->bd;
+
+			$sql = "INSERT INTO folhadeponto
+		   		(ano, mes, faltas, dsr, he60, he100, feriado, cod_funcionario) 
+			VALUES
+				($this->ano, $this->mes, $this->faltas, $this->dsr, $this->he60, $this->he100, $this->feriado, $this->cod_funcionario)";
+
+			$sqlFechamento = "UPDATE fechamentoFolhaDePonto 
+							SET 
+
+							fechado = 1 WHERE mes = $this->mes AND ano = $this->ano";
+
+			// echo $sql;
+
+			$bd->qry($sql);
+			$bd->qry($sqlFechamento);
 		}
 
-		function setCodFuncionario($val){
+		public function editar(){
+			$bd = $this->bd;
+
+			$sql = 
+			"UPDATE folhadeponto 
+				SET 
+					faltas = $this->faltas,
+					dsr = $this->dsr,
+					he60 = $this->he60,
+					he100 = $this->he100,
+					feriado = $this->feriado
+				WHERE 
+					mes = $this->mes AND 
+					ano = $this->ano AND
+					cod_funcionario = $this->cod_funcionario";
+
+			$bd->qry($sql);
+
+		}
+
+		public function getCodFuncionario(){
+			return $this->cod_funcionario;
+		}
+		
+		public function getAno(){
+			return $this->ano;
+		}
+		
+		public function getMes(){
+			return $this->mes;
+		}
+		
+		public function getFaltas(){
+			return $this->faltas;
+		}
+		
+		public function getDsr(){
+			return $this->dsr;
+		}
+		
+		public function getHe60(){
+			return $this->he60;
+		}
+		
+		public function getHe100(){
+			return $this->he100;
+		}
+		
+		public function getFeriado(){
+			return $this->feriado;
+		}
+
+		public function setCodFuncionario($val){
 			$this->cod_funcionario = $val;
 			return $this;
 		}
 		
-		function setAno($val){
+		public function setAno($val){
 			$this->ano = $val;
 			return $this;
 		}
 		
-		function setMes($val){
+		public function setMes($val){
 			$this->mes = $val;
 			return $this;
 		}
 		
-		function setFaltas(){
+		public function setFaltas($val){
 			$this->faltas = $val;
 			return $this;
 		}
 		
-		function setDsr(){
+		public function setDsr($val){
 			$this->dsr = $val;
 			return $this;
 		}
 		
-		function setHe60($val){
+		public function setHe60($val){
 			$this->he60 = $val;
 			return $this;
 		}
 		
-		function setHe100($val){
+		public function setHe100($val){
 			$this->he100 = $val;
 			return $this;
 		}
 		
-		function setFeriado($val){
+		public function setFeriado($val){
 			$this->feriado = $val;
 			return $this;
 		}
