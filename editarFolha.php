@@ -18,7 +18,6 @@
 	$total = $prosis->countFuncionarios();
 
 	$fponto = new FolhaDePonto();
-	$fponto->checarFechamentos();
 
 
 						

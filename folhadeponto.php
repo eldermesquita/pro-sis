@@ -18,7 +18,7 @@
 	$total = $prosis->countFuncionarios();
 
 	$fponto = new FolhaDePonto();
-	$fponto->checarFechamentos();
+	$fponto->checarFechamento();
 
 
 	//set current menu

@@ -19,7 +19,7 @@
 			$this->bd = new SimpleDb();
 		}
 
-		public function checarFechamentos(){
+		public function checarFechamento(){
 			$bd = $this->bd;
 			$mes = date('n');
 			$ano = date('Y');

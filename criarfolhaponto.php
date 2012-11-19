@@ -18,11 +18,8 @@
 	$total = $prosis->countFuncionarios();
 
 	$fponto = new FolhaDePonto();
-	$fponto->checarFechamentos();
-
 
 						
-
 	$sql = "SELECT * FROM fechamentoFolhaDePonto WHERE id = " . $_GET['id'];
 	
 	$query = $fponto->bd->qry($sql);

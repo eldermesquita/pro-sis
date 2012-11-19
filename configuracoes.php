@@ -120,7 +120,7 @@
             <nav id="secondary">
               <ul>
                 <li class="current"><a href="#maintab">Minha conta</a></li>
-                <li><a href="#sistema">Sistema</a></li>
+                <li><a href="#empresa">Empresa</a></li>
               </ul>
             </nav>
           
@@ -191,10 +191,61 @@
 					<div class="clear"></div>
               </div>
               
-              <div class="tab" id="sistema">
-                <h2>Entre em contato</h2>
+              <div class="tab" id="empresa">
+                <h2>Informações sobre a empresa</h2>
   				
-				
+				<form action="#" method="post" class="validar minhaconta">
+
+				    <section>
+				      <label for="nome">
+				        Nome
+						<small>Por favor, escreva o nome da empresa.</small>
+				      </label>
+
+				      <div>
+				        <input type="text" value="" class="required" placeholder="Digite o nome" name="nome" id="nome">
+				      </div>
+				    </section>
+
+				    <section>
+				      <label for="login">
+				        CNPJ
+						<small>Por favor, escreva o CNPJ da empresa.</small>
+				      </label>
+
+				      <div>
+				        <input type="text" value="" class="required" placeholder="Digite o CNPJ" name="cnpj">
+				      </div>
+				    </section>
+
+
+				    <section>
+				      <label for="email">
+				        Endereço
+						<small>Por favor, escreva o endereço.</small>
+				      </label>
+
+				      <div>
+				        <input value="" type="text" class="required" placeholder="Digite o endereço" name="end">
+				      </div>
+				    </section>
+
+				    <section>
+				      <label for="ultimo">
+				        Telefone
+						<small>Por favor, escreva seu telefone.</small>
+				      </label>
+
+				      <div>
+				        <input value="" type="text" placeholder="Digite o numero do telefone" name="telefone" id="telefone" />
+				      </div>
+				    </section>
+
+				  
+				    <section>
+				    	<input type="submit" class="button primary submit clickminhaconta" value="Atualizar empresa" />
+				    </section>
+				</form>
 				
 				
 					<div class="clear"></div>

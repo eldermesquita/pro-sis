@@ -12,15 +12,14 @@
 	
 	require "classes/funcionarios.class.php";
 	require "classes/administrador.class.php";
-	require "classes/folhadeponto.class.php";
+	require "classes/folhadepagamento.class.php";
 	
 	$prosis = new Funcionarios();
 	$total = $prosis->countFuncionarios();
 
-	$fponto = new FolhaDePonto();
-	$fponto->checarFechamentos();
+	$fpagamento = new FolhaDePagamento();
 
-	$bd = $fponto->bd;
+	$bd = $fpagamento->bd;
 
 	//set current menu
 	$menu_folhadepagamento = "current";
@@ -148,23 +147,65 @@
 
 
                 	if($total != 0):
-                	
+                	$fpagamento->checarFechamento();
                 ?>
-                <form action="">
-                <div style="width: 100px">
-                <label style="display: block; margin-bottom: 4px" for="data">Data</label>
-                <select name="data" id="data">
-            	<?php
-            		while($i = $bd->fetch($q)):
-            	?>
-            		<option value="<?php echo $i->mes . "/" . $i->ano; ?>"><?php echo $i->mes . "/" . $i->ano; ?></option>
-            		
-            	<?php
-            		endwhile;
-            	?>
-            	</select>
-            	</div>
-            	</form>
+                
+               <table class="datatable">
+				    <thead>
+				      <tr>
+						<th>Data</th>
+						<th>Tipo</th>
+						<th>Ações</th>
+				      </tr>
+				    </thead>
+
+				    <tbody>
+				
+
+					<?php
+
+						
+
+						$sql = "SELECT * FROM  fechamentofolhadepagamento ORDER BY id DESC";
+						
+						$query = $bd->qry($sql);
+
+						// echo $sql;
+						
+						while($inf = $bd->fetch($query)):
+
+						$cor = "background: #e3eff9";
+						$texto = "Ver Folha de Pagamento";
+						$link = "fpagamento.php?id=";
+						$tipo = 'Adiantamento';
+
+						if($inf->tipo == 1)
+						{
+							$cor = "background: #DDF0DA";
+							$tipo = "Pagamento";
+						}
+					?>
+					
+					
+					
+				      <tr style="<?php echo $cor; ?>">
+				        <td style="<?php echo $cor; ?>"><?php echo "$inf->mes/$inf->ano"; ?></td>
+				        <td style="<?php echo $cor; ?>"><?php echo $tipo; ?></td>
+						<td style="<?php echo $cor; ?>">
+						  <span class="button-group">
+						      <a href="<?php echo $link . $inf->id; ?>" class="button icon edit"><?php echo $texto; ?></a>
+						  </span>
+						 </td>
+				      </tr>
+				
+					<?php
+						endwhile;
+					?>
+
+				     
+				    </tbody>
+				  </table>
+				  
             	<?php
             		else:
             	?>
