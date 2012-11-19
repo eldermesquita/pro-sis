@@ -20,9 +20,10 @@
 	$fponto = new FolhaDePonto();
 	$fponto->checarFechamentos();
 
+	$bd = $fponto->bd;
 
 	//set current menu
-	$menu_folhadeponto = "current";
+	$menu_folhadepagamento = "current";
 
 
 	$adm = new Administrador();
@@ -129,7 +130,7 @@
             <!-- Secondary navigation -->
             <nav id="secondary">
               <ul>
-                <li class="current"><a href="#maintab">Lista de Fechamentos</a></li>
+                <li class="current"><a href="#maintab">Folha de Pagamento</a></li>
               </ul>
             </nav>
           
@@ -137,66 +138,45 @@
             <section id="content">
               
               <div class="tab" id="maintab">
-                <h2>Fechamentos</h2> 
+                <h2>Folha de Pagamento</h2> 
+                
+                <?php
 
+                	$sql = "SELECT * FROM fechamentoFolhaDePonto WHERE fechado <> 0";
+                	$q = $bd->qry($sql);
+                	$total = $bd->num($q);
+
+
+                	if($total != 0):
+                	
+                ?>
+                <form action="">
+                <div style="width: 100px">
+                <label style="display: block; margin-bottom: 4px" for="data">Data</label>
+                <select name="data" id="data">
+            	<?php
+            		while($i = $bd->fetch($q)):
+            	?>
+            		<option value="<?php echo $i->mes . "/" . $i->ano; ?>"><?php echo $i->mes . "/" . $i->ano; ?></option>
+            		
+            	<?php
+            		endwhile;
+            	?>
+            	</select>
+            	</div>
+            	</form>
+            	<?php
+            		else:
+            	?>
+				<span>Você precisa fechar a folha de pagamento antes de gerar a folha de pagamento.</span>
+				<br /><br>
+				<input type="submit" onclick="location.href='folhadeponto.php'" value="Voltar" class="button primary submit">
+				         	
+            	<?php
+            		endif;
+            	?>
 			<br />
-				<table class="datatable">
-				    <thead>
-				      <tr>
-						<th>Data</th>
-				        <th>Fechamento</th>
-						<th>Ações</th>
-				      </tr>
-				    </thead>
-
-				    <tbody>
 				
-
-					<?php
-
-						
-
-						$sql = "SELECT * FROM fechamentoFolhaDePonto ORDER BY id DESC";
-						
-						$query = $fponto->bd->qry($sql);
-
-						// echo $sql;
-						
-						while($inf = $fponto->bd->fetch($query)):
-
-						$fechado = "Em aberto";
-						$cor = "background: #F0C7C8";
-						$texto = "Fechar Folha de Ponto";
-						$link = "criarfolhaponto.php?id=";
-
-						if($inf->fechado == 1)
-						{
-							$fechado = "Fechado";
-							$cor = "background: #DDF0DA";
-							$texto = "Editar Folha de Ponto";
-							$link = "editarFolha.php?id=";
-						}
-					?>
-					
-					
-					
-				      <tr style="<?php echo $cor; ?>">
-				        <td style="<?php echo $cor; ?>"><?php echo "$inf->mes/$inf->ano"; ?></td>
-						<td style="<?php echo $cor; ?>"><?php echo $fechado; ?></td>
-						<td style="<?php echo $cor; ?>">
-						  <span class="button-group">
-						      <a href="<?php echo $link . $inf->id; ?>" class="button icon edit"><?php echo $texto; ?></a>
-						  </span>
-						 </td>
-				      </tr>
-				
-					<?php
-						endwhile;
-					?>
-
-				     
-				    </tbody>
-				  </table>
 
 <div class="clear"></div>
               </div>

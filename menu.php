@@ -79,7 +79,7 @@
                 </li>
                 
                 <li class="<?php __($menu_relatorios); ?>">
-                  <a href="naoimplementado.php">
+                  <a href="relatorios.php">
                     <span class="icon relatorios"></span>
                     Relatórios
                   </a>
