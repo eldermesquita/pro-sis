@@ -161,8 +161,6 @@
               <div class="tab" id="maintab">
                 <h2>Fechamento de: <?php echo "$folha->mes/$folha->ano"; ?> </h2> 
 
-                	<input type="submit" value="Salvar Folha de Ponto" class="button primary submit salvar">
-                <br><br>
               <form id="fechamento" method="post">
               
                 <table>
